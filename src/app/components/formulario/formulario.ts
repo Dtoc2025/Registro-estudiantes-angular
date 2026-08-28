@@ -1,24 +1,31 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { StudentService } from '../../services/student';
+import { Student } from '../../models/student';
 
 @Component({
   selector: 'app-formulario',
   standalone: true,
   imports: [
-    CommonModule,       
-    ReactiveFormsModule 
+    CommonModule,
+    ReactiveFormsModule
   ],
   templateUrl: './formulario.html',
   styleUrls: ['./formulario.css']
 })
 export class FormularioComponent implements OnInit {
   registroForm!: FormGroup;
+  modoEdicion: boolean = false;
+  estudianteEditando: Student | null = null;
 
   carreras: string[] = ['Informática', 'Administración', 'Diseño', 'Electrónica', 'Contabilidad'];
   jornadas: string[] = ['Matutina', 'Vespertina', 'Nocturna'];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private studentService: StudentService
+  ) {}
 
   ngOnInit(): void {
     this.registroForm = this.fb.group({
@@ -30,7 +37,19 @@ export class FormularioComponent implements OnInit {
       jornada: ['', Validators.required],
       fechaNacimiento: ['', Validators.required],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
-      aceptarReglamento: [false, Validators.requiredTrue]
+      aceptaReglamento: [false, Validators.requiredTrue]
+    });
+
+    this.studentService.getSelectedStudent().subscribe((student) => {
+      if (student) {
+        this.modoEdicion = true;
+        this.estudianteEditando = student;
+        this.registroForm.patchValue(student);
+      } else {
+        this.modoEdicion = false;
+        this.estudianteEditando = null;
+        this.registroForm.reset({ aceptaReglamento: false });
+      }
     });
   }
 
@@ -38,8 +57,16 @@ export class FormularioComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registroForm.valid) {
-      console.log('Formulario válido:', this.registroForm.value);
-      alert('¡Formulario enviado con éxito!');
+      const datosEstudiante: Student = this.registroForm.value;
+
+      if (this.modoEdicion) {
+        this.studentService.updateStudent(datosEstudiante);
+        this.studentService.selectStudentForEdit(null);
+      } else {
+        this.studentService.addStudent(datosEstudiante);
+      }
+
+      this.registroForm.reset({ aceptaReglamento: false });
     } else {
       this.registroForm.markAllAsTouched();
     }
