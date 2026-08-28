@@ -1,1 +1,114 @@
-<p>formulario works!</p>
+<div class="form-container">
+  <h2>Registro de Estudiante</h2>
+
+  <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
+    
+    <!-- Nombre Completo -->
+    <div class="form-group">
+      <label>Nombre Completo:</label>
+      <input type="text" formControlName="nombreCompleto" placeholder="Ej. Juan Pérez">
+      <div class="error-messages" *ngIf="f['nombreCompleto'].touched && f['nombreCompleto'].invalid">
+        <small *ngIf="f['nombreCompleto'].errors?.['required']">El nombre es obligatorio.</small>
+        <small *ngIf="f['nombreCompleto'].errors?.['minlength']">Debe tener al menos 5 caracteres.</small>
+      </div>
+    </div>
+
+    <!-- Carné -->
+    <div class="form-group">
+    <label>Carné:</label>
+    <input type="text" formControlName="carne" placeholder="Ej. 2023001">
+    <div class="error-messages" *ngIf="f['carne'].touched && f['carne'].invalid">
+        <small *ngIf="f['carne'].errors?.['required']">El carné es obligatorio.</small>
+        <small *ngIf="f['carne'].errors?.['minlength']">Mínimo 5 caracteres.</small>
+        <small *ngIf="f['carne'].errors?.['maxlength']">Máximo 10 caracteres.</small>
+        <small *ngIf="f['carne'].errors?.['pattern']">El carné debe contener solo números (sin letras).</small>
+    </div>
+    </div>
+
+    <!-- Correo Electrónico -->
+    <div class="form-group">
+      <label>Correo Electrónico:</label>
+      <input type="email" formControlName="correo" placeholder="ejemplo@correo.com">
+      <div class="error-messages" *ngIf="f['correo'].touched && f['correo'].invalid">
+        <small *ngIf="f['correo'].errors?.['required']">El correo es obligatorio.</small>
+        <small *ngIf="f['correo'].errors?.['email']">Debe ser un formato de correo válido.</small>
+      </div>
+    </div>
+
+    <!-- Edad -->
+    <div class="form-group">
+      <label>Edad:</label>
+      <input type="number" formControlName="edad">
+      <div class="error-messages" *ngIf="f['edad'].touched && f['edad'].invalid">
+        <small *ngIf="f['edad'].errors?.['required']">La edad es obligatoria.</small>
+        <small *ngIf="f['edad'].errors?.['min']">La edad mínima es 14 años.</small>
+        <small *ngIf="f['edad'].errors?.['max']">La edad máxima es 25 años.</small>
+      </div>
+    </div>
+
+    <!-- Carrera -->
+    <div class="form-group">
+      <label>Carrera:</label>
+      <select formControlName="carrera">
+        <option value="" disabled>Seleccione una carrera...</option>
+        <option *ngFor="let carrera of carreras" [value]="carrera">{{ carrera }}</option>
+      </select>
+      <div class="error-messages" *ngIf="f['carrera'].touched && f['carrera'].invalid">
+        <small *ngIf="f['carrera'].errors?.['required']">Debe seleccionar una carrera.</small>
+      </div>
+    </div>
+
+    <!-- Jornada -->
+    <div class="form-group">
+      <label>Jornada:</label>
+      <select formControlName="jornada">
+        <option value="" disabled>Seleccione una jornada...</option>
+        <option *ngFor="let jornada of jornadas" [value]="jornada">{{ jornada }}</option>
+      </select>
+      <div class="error-messages" *ngIf="f['jornada'].touched && f['jornada'].invalid">
+        <small *ngIf="f['jornada'].errors?.['required']">Debe seleccionar una jornada.</small>
+      </div>
+    </div>
+
+    <!-- Fecha de Nacimiento -->
+    <div class="form-group">
+      <label>Fecha de Nacimiento:</label>
+      <input type="date" formControlName="fechaNacimiento">
+      <div class="error-messages" *ngIf="f['fechaNacimiento'].touched && f['fechaNacimiento'].invalid">
+        <small *ngIf="f['fechaNacimiento'].errors?.['required']">La fecha de nacimiento es obligatoria.</small>
+      </div>
+    </div>
+
+    <!-- Teléfono -->
+    <div class="form-group">
+      <label>Teléfono:</label>
+      <input type="text" formControlName="telefono" placeholder="12345678">
+      <div class="error-messages" *ngIf="f['telefono'].touched && f['telefono'].invalid">
+        <small *ngIf="f['telefono'].errors?.['required']">El teléfono es obligatorio.</small>
+        <small *ngIf="f['telefono'].errors?.['pattern']">Debe contener exactamente 8 dígitos numéricos.</small>
+      </div>
+    </div>
+
+    <!-- Checkbox de Reglamento -->
+    <div class="form-group checkbox-group">
+      <label>
+        <input type="checkbox" formControlName="aceptarReglamento">
+        Acepto el reglamento estudiantil
+      </label>
+      <div class="error-messages" *ngIf="f['aceptarReglamento'].touched && f['aceptarReglamento'].invalid">
+        <small *ngIf="f['aceptarReglamento'].errors?.['required']">Debe aceptar el reglamento para continuar.</small>
+      </div>
+    </div>
+
+    <!-- Botón Submit -->
+    <button type="submit" [disabled]="registroForm.invalid">Registrar Estudiante</button>
+  </form>
+</div>
+
+<!-- Bloque de depuración (eliminar al terminar de probar) -->
+<div style="background: #f4f4f4; padding: 15px; margin-top: 20px; border-radius: 8px;">
+  <h3>Estado del Formulario</h3>
+  <p><strong>¿Formulario Válido?:</strong> {{ registroForm.valid ? 'SÍ' : 'NO' }}</p>
+  <p><strong>Valores en tiempo real:</strong></p>
+  <pre>{{ registroForm.value | json }}</pre>
+</div>
