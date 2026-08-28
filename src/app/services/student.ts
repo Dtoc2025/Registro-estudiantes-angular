@@ -18,11 +18,24 @@ export class StudentService {
     return this.selectedStudentSubject.asObservable();
   }
 
-  selectStudentForEdit(student: Student | null) {
+  selectStudentForEdit(student: Student | null): void {
     this.selectedStudentSubject.next(student);
   }
 
-  deleteStudent(carne: string) {
+  addStudent(student: Student): void {
+    this.students.push(student);
+    this.studentsSubject.next([...this.students]);
+  }
+
+  updateStudent(studentActualizado: Student): void {
+    const index = this.students.findIndex(s => s.carne === studentActualizado.carne);
+    if (index !== -1) {
+      this.students[index] = studentActualizado;
+      this.studentsSubject.next([...this.students]);
+    }
+  }
+
+  deleteStudent(carne: string): void {
     this.students = this.students.filter(s => s.carne !== carne);
     this.studentsSubject.next([...this.students]);
   }

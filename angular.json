@@ -1,10 +1,17 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
+<<<<<<< HEAD
   "cli": {
     "packageManager": "npm",
     "analytics": "dac1227f-f141-447a-ba0c-cf15613b9a31"
   },
+=======
+"cli": {
+  "packageManager": "pnpm",    
+  "analytics": false           
+},
+>>>>>>> 73e28cba7e35d9b3133be3c5c5d4136f6132009e
   "newProjectRoot": "projects",
   "projects": {
     "registro_estudiantes_proyecto": {
