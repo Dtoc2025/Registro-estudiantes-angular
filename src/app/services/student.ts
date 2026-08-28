@@ -97,6 +97,11 @@ export class StudentService {
 		return this.getStudents().length;
 	}
 
+	/** Busca un estudiante por su id. Retorna undefined si no existe. */
+	getStudentById(id: string): Student | undefined {
+		return this.getStudents().find((student) => student.id === id);
+	}
+
 	/** Guarda el listado actualizado y reporta si la persistencia tuvo éxito. */
 	private saveStudents(students: Student[]): boolean {
 		if (!this.hasStorage()) {
