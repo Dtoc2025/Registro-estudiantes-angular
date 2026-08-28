@@ -1,1 +1,51 @@
-<p>listado works!</p>
+<div class="listado-container">
+  <div class="header-listado">
+    <h2>Listado de Estudiantes</h2>
+    <button class="btn-cancelar" (click)="limpiarSeleccion()">Limpiar / Cancelar Selección</button>
+  </div>
+
+  <table class="tabla-estudiantes">
+    <thead>
+      <tr>
+        <th>Carné</th>
+        <th>Nombre Completo</th>
+        <th>Correo</th>
+        <th>Edad</th>
+        <th>Carrera</th>
+        <th>Jornada</th>
+        <th>Teléfono</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let est of estudiantes">
+        <td>{{ est.carne }}</td>
+        <td>{{ est.nombreCompleto }}</td>
+        <td>{{ est.correo }}</td>
+        <td>{{ est.edad }}</td>
+        <td>{{ est.carrera }}</td>
+        <td>{{ est.jornada }}</td>
+        <td>{{ est.telefono }}</td>
+        <td class="acciones">
+          <button class="btn-editar" (click)="onEditar(est)">Editar</button>
+          <button class="btn-eliminar" (click)="confirmarEliminacion(est)">Eliminar</button>
+        </td>
+      </tr>
+      <tr *ngIf="estudiantes.length === 0">
+        <td colspan="8" class="sin-datos">No hay estudiantes registrados.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal de confirmación -->
+  <div class="modal-overlay" *ngIf="mostrarModal">
+    <div class="modal-content">
+      <h3>Confirmar Eliminación</h3>
+      <p>¿Estás seguro de que deseas eliminar al estudiante <strong>{{ estudianteAEliminar?.nombreCompleto }}</strong>?</p>
+      <div class="modal-actions">
+        <button class="btn-confirmar" (click)="eliminarEstudiante()">Sí, eliminar</button>
+        <button class="btn-modal-cancelar" (click)="cancelarEliminacion()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
