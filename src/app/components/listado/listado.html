@@ -1,50 +1,84 @@
 <div class="listado-container">
+
   <div class="header-listado">
-    <h2>Listado de Estudiantes</h2>
-    <button class="btn-cancelar" (click)="limpiarSeleccion()">Limpiar / Cancelar Selección</button>
+    <div class="header-left">
+      <h2>Listado de Estudiantes</h2>
+      <span class="total-estudiantes">
+        Total: <span class="badge">{{ totalEstudiantes }}</span>
+      </span>
+    </div>
+    <button class="btn-cancelar" (click)="limpiarSeleccion()">
+      Limpiar / Cancelar
+    </button>
   </div>
 
-  <table class="tabla-estudiantes">
-    <thead>
-      <tr>
-        <th>Carné</th>
-        <th>Nombre Completo</th>
-        <th>Correo</th>
-        <th>Edad</th>
-        <th>Carrera</th>
-        <th>Jornada</th>
-        <th>Teléfono</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let est of estudiantes">
-        <td>{{ est.carne }}</td>
-        <td>{{ est.nombreCompleto }}</td>
-        <td>{{ est.correo }}</td>
-        <td>{{ est.edad }}</td>
-        <td>{{ est.carrera }}</td>
-        <td>{{ est.jornada }}</td>
-        <td>{{ est.telefono }}</td>
-        <td class="acciones">
-          <button class="btn-editar" (click)="onEditar(est)">Editar</button>
-          <button class="btn-eliminar" (click)="confirmarEliminacion(est)">Eliminar</button>
-        </td>
-      </tr>
-      <tr *ngIf="estudiantes.length === 0">
-        <td colspan="8" class="sin-datos">No hay estudiantes registrados.</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="buscador-container">
+    <div class="buscador-wrapper">
+      <input
+        type="text"
+        placeholder="Buscar por nombre o carnet..."
+        [value]="terminoBusqueda"
+        (input)="buscarEstudiantes($event)"
+      />
+    </div>
+    <span class="resultados-count" *ngIf="terminoBusqueda">
+      {{ estudiantesFiltrados.length }} resultados
+    </span>
+  </div>
 
-  <!-- Modal de confirmación -->
+  <div class="tabla-wrapper">
+    <table class="tabla-estudiantes">
+      <thead>
+        <tr>
+          <th>Carnet</th>
+          <th>Nombre Completo</th>
+          <th>Correo</th>
+          <th>Edad</th>
+          <th>Carrera</th>
+          <th>Jornada</th>
+          <th>Telefono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let est of estudiantesFiltrados">
+          <td class="td-carnet">{{ est.carne }}</td>
+          <td class="td-nombre">{{ est.nombreCompleto }}</td>
+          <td>{{ est.correo }}</td>
+          <td><span class="edad-badge">{{ est.edad }}</span></td>
+          <td>{{ est.carrera }}</td>
+          <td>{{ est.jornada }}</td>
+          <td>{{ est.telefono }}</td>
+          <td class="acciones">
+            <button class="btn-editar" (click)="onEditar(est)">Editar</button>
+            <button class="btn-eliminar" (click)="confirmarEliminacion(est)">Eliminar</button>
+          </td>
+        </tr>
+        <tr *ngIf="estudiantesFiltrados.length === 0">
+          <td colspan="8" class="sin-datos">
+            <p>No hay estudiantes registrados</p>
+            <span class="empty-sub">Agrega un nuevo estudiante usando el formulario</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <div class="modal-overlay" *ngIf="mostrarModal">
     <div class="modal-content">
-      <h3>Confirmar Eliminación</h3>
-      <p>¿Estás seguro de que deseas eliminar al estudiante <strong>{{ estudianteAEliminar?.nombreCompleto }}</strong>?</p>
+      <h3>Confirmar Eliminacion</h3>
+      <p>
+        Estas seguro de eliminar al estudiante
+        <strong>{{ estudianteAEliminar?.nombreCompleto }}</strong>?
+      </p>
+      <p class="modal-sub">Esta accion no se puede deshacer.</p>
       <div class="modal-actions">
-        <button class="btn-confirmar" (click)="eliminarEstudiante()">Sí, eliminar</button>
-        <button class="btn-modal-cancelar" (click)="cancelarEliminacion()">Cancelar</button>
+        <button class="btn-confirmar" (click)="eliminarEstudiante()">
+          Si, eliminar
+        </button>
+        <button class="btn-modal-cancelar" (click)="cancelarEliminacion()">
+          Cancelar
+        </button>
       </div>
     </div>
   </div>

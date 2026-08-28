@@ -8,19 +8,41 @@ import { Student } from '../../models/student';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './listado.html',
-  styleUrl: './listado.css'
+  styleUrls: ['./listado.css']
 })
-export class Listado implements OnInit {
+export class ListadoComponent implements OnInit {
   estudiantes: Student[] = [];
+  estudiantesFiltrados: Student[] = [];
   estudianteAEliminar: Student | null = null;
   mostrarModal: boolean = false;
+  totalEstudiantes: number = 0;
+  terminoBusqueda: string = '';
 
   constructor(private studentService: StudentService) {}
 
   ngOnInit(): void {
-    this.studentService.getStudents().subscribe((data) => {
+    this.studentService.getStudents().subscribe((data: Student[]) => {
       this.estudiantes = data;
+      this.estudiantesFiltrados = [...this.estudiantes];
+      this.totalEstudiantes = this.estudiantes.length;
     });
+  }
+
+  buscarEstudiantes(event: any): void {
+    this.terminoBusqueda = event.target.value;
+    this.aplicarFiltro();
+  }
+
+  aplicarFiltro(): void {
+    if (!this.terminoBusqueda) {
+      this.estudiantesFiltrados = [...this.estudiantes];
+      return;
+    }
+    const termino = this.terminoBusqueda.toLowerCase();
+    this.estudiantesFiltrados = this.estudiantes.filter(est =>
+      est.nombreCompleto.toLowerCase().includes(termino) ||
+      est.carne.includes(this.terminoBusqueda)
+    );
   }
 
   onEditar(estudiante: Student): void {
@@ -39,12 +61,14 @@ export class Listado implements OnInit {
 
   eliminarEstudiante(): void {
     if (this.estudianteAEliminar) {
-      this.studentService.deleteStudent(this.estudianteAEliminar.carne);
+      this.studentService.deleteStudent(this.estudianteAEliminar.id!);
       this.cancelarEliminacion();
     }
   }
 
   limpiarSeleccion(): void {
+    this.terminoBusqueda = '';
     this.studentService.selectStudentForEdit(null);
+    this.estudiantesFiltrados = [...this.estudiantes];
   }
 }

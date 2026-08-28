@@ -55,11 +55,19 @@ export class FormularioComponent implements OnInit {
 
   get f() { return this.registroForm.controls; }
 
+  limpiarFormulario(): void {
+    this.registroForm.reset({ aceptaReglamento: false });
+    this.modoEdicion = false;
+    this.estudianteEditando = null;
+    this.studentService.selectStudentForEdit(null);
+  }
+
   onSubmit(): void {
     if (this.registroForm.valid) {
       const datosEstudiante: Student = this.registroForm.value;
 
-      if (this.modoEdicion) {
+      if (this.modoEdicion && this.estudianteEditando) {
+        datosEstudiante.id = this.estudianteEditando.id;
         this.studentService.updateStudent(datosEstudiante);
         this.studentService.selectStudentForEdit(null);
       } else {
@@ -67,6 +75,8 @@ export class FormularioComponent implements OnInit {
       }
 
       this.registroForm.reset({ aceptaReglamento: false });
+      this.modoEdicion = false;
+      this.estudianteEditando = null;
     } else {
       this.registroForm.markAllAsTouched();
     }
